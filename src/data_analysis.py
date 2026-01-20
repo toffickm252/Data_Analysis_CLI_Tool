@@ -41,27 +41,37 @@ print(customer_df.duplicated().sum())
 
 # Calculate Total Revenue 
 def total_revenue(df):
-    df['Selling_Amount'] = df['quantity'] * df['price']
+    df['Selling_Amount'] = df['quantity'] * df['price'] # quantity multiplied by selling price per item
     return df['Selling_Amount'].sum()
 
 # Calculate Average Sales Price 
 def average_price(df):
-    return df['price'].mean()
+    return df['price'].mean() # average price of all products
 
 # Best Selling Product
 def best_selling_product(df):
-    return df.groupby('product')['quantity'].sum().idxmax()
+    return df.groupby('product')['quantity'].sum().idxmax() # product with highest quantity sold
 
 # analyze monthly sales trends
 def monthly_sales_trends(df):
-    df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    df['month'] = df['date'].dt.to_period('M')
-    monthly_sales = df.groupby('month')['quantity'].sum()
+    df['date'] = pd.to_datetime(df['date'], errors='coerce') # convert date column to datetime
+    df['month'] = df['date'].dt.to_period('M') # extract month and year
+    monthly_sales = df.groupby('month')['quantity'].sum() # sum quantity sold per month
     return monthly_sales
 
 # Ouput results in formatted way tabular form
-print(f"Total Revenue from sales data: ${total_revenue(customer_df):.2f}")
-print(f"Average Sales Price: ${average_price(customer_df):.2f}")
+print(f"Total Revenue from sales data: Ghc {total_revenue(customer_df):.3f}")
+print(f"Average Sales Price: Ghc {average_price(customer_df):.3f}")
 print(f"Best Selling Product: {best_selling_product(customer_df)}")
 print("\nMonthly Sales Trends:")
 print(monthly_sales_trends(customer_df))
+
+# Tabulate monthly sales trends
+from tabulate import tabulate
+
+data = [
+    ['Total Revenue', f'Ghc {total_revenue(customer_df):.2f}'],
+    ['Average Price', f'Ghc {average_price(customer_df):.2f}'],
+    ['Best Selling Product', best_selling_product(customer_df)]
+]
+print(tabulate(data, headers=['Metric', 'Value'], tablefmt='grid'))
