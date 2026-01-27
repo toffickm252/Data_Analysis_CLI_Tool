@@ -3,6 +3,7 @@ import pandas as pd
 # import seaborn as sns
 import os
 import numpy as np
+import argparse
 
 print("Starting Data loading Process...")
 base_dir = os.getcwd()
@@ -59,6 +60,20 @@ def monthly_sales_trends(df):
     monthly_sales = df.groupby('month')['quantity'].sum() # sum quantity sold per month
     return monthly_sales
 
+def main():
+    arg_parser = argparse.ArgumentParser(description='Process some integers.')
+    arg_parser.add_argument('integers', metavar='N', 
+                        type=int, nargs='+',
+                        help='an integer for the accumulator')
+    arg_parser.add_argument('--accumulate', 
+                    action='store_const',
+                    const=sum, 
+                    help='sum the integers')
+
+    args = arg_parser.parse_args()
+    if args.accumulate:
+        print(args.accumulate(args.integers))
+
 # Ouput results in formatted way tabular form
 print(f"Total Revenue from sales data: Ghc {total_revenue(customer_df):.3f}")
 print(f"Average Sales Price: Ghc {average_price(customer_df):.3f}")
@@ -75,3 +90,4 @@ data = [
     ['Best Selling Product', best_selling_product(customer_df)]
 ]
 print(tabulate(data, headers=['Metric', 'Value'], tablefmt='grid'))
+
